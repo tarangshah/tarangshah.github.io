@@ -12,11 +12,11 @@
 
     <link rel="shortcut icon" href="../assets/favicon.ico">
     <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=103b25a907" />    
-    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=103b25a907" />    
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=49c18d2294" />    
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=49c18d2294" />    
 
     <!--[if lt IE 9]>
-        <script src="/assets/js/html5shiv.js?v=103b25a907"></script>
+        <script src="/assets/js/html5shiv.js?v=49c18d2294"></script>
     <![endif]-->
 
     <meta name="generator" content="Ghost 0.4" />
@@ -169,9 +169,18 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
   }
 }
 </code></pre>
+
+<p>You can also add <code>startup_stm32f4xx.o (STACK)</code> to the CCM block if it is already used. <br />
+For example</p>
+
+<pre><code>RW_IRAM2 0x10000000 0x00010000  {  ; CCM  
+   .ANY (CCM_DATA)
+   startup_stm32f4xx.o (STACK)
+  }
+</code></pre>
                 </section>
-                <section class="post-share">
-                    <div class="post-share-icons">
+                <section class="post-share1">
+                    <div class="post-share1icons">
                         <a class="fa fa-twitter" href="https://twitter.com/share?text=How%20to%20use%20the%20STM32f4%20CCM%20in%20a%20Keil%20Project&amp;url=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/"
                             onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                             <span class="hidden">Twitter</span>
@@ -192,7 +201,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
             <section class="post-author">
                 <div class="inner">
                     <div class="author-image-container col-aside">
-                        <img src="index.html" class="author-image" />
+                        <img src="../content/images/2014/Jul/iron-man-arc-reactor-image-emerging-technologies-innovation-building-an-suit-part-44735.jpg" class="author-image" />
                     </div>
                     <div class="author-info">
                         <h4>Tarang Shah</h4>
@@ -208,7 +217,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
     </article>
 
 </main>
-<script src="../assets/js/disqus.js?v=103b25a907"></script>
+<script src="../assets/js/disqus.js?v=49c18d2294"></script>
 
 
     <footer class="site-footer">
@@ -223,11 +232,11 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
     </footer>
 
     
-    <script src="../public/jquery.js?v=103b25a907"></script>
+    <script src="../public/jquery.js?v=49c18d2294"></script>
 
     
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=103b25a907"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=103b25a907"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=49c18d2294"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=49c18d2294"></script>
 
 </body>
 </html>

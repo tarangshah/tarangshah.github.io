@@ -762,28 +762,30 @@ main {
     padding-bottom: 0;
 }
 
-.post-share {
+.post-share1 {
     margin: 40px 0 30px;
     padding: 15px 0;
     border-top: solid 1px #eaeaea;
     border-bottom: solid 1px #eaeaea;
 }
 
-.post-share-icons {
+.post-share1icons {
     float: right;
     margin-top: -5px;
 }
 
-.post-share .fa {
+.post-share1 .fa {
+    font-size: 18px;
+    font-size: 1.8rem;
     margin-left: 5px;
-    color: #444;
+    color: rgb(4,4,4);
 }
 
-.post-share .fa:hover {
+.post-share1 .fa:hover {
     color: rgb(247,97,97);
 }
 
-.post-share h6 {
+.post-share1 h6 {
 	font-size: 18px;
     font-size: 1.8rem;
     margin-bottom: 0;
