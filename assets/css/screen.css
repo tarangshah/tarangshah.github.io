@@ -541,6 +541,7 @@ h1.blog-title {
     line-height: 1em;
     font-weight: 700;
     letter-spacing: 0.4px;
+    text-shadow: 4px 4px #222;
     margin-bottom: 5px;
 }
 
@@ -978,7 +979,7 @@ main {
 
 
     h1, h2 {
-		font-size: 30px;	
+		font-size: 30px;
         font-size: 3rem;
         line-height: 1.1em;
         letter-spacing: -1px;

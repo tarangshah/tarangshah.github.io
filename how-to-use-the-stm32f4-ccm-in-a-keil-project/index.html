@@ -1,27 +1,66 @@
-<!DOCTYPE html>
-<html>
+
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>How to use the STM32f4 CCM in a Keil Project</title>
-    <meta name="description" content="" />
+    <meta name="description" content="">
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="../assets/favicon.ico">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=f8c6738af7" />    
-    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=f8c6738af7" />    
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=78a2232542">
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=78a2232542">
 
     <!--[if lt IE 9]>
-        <script src="/assets/js/html5shiv.js?v=f8c6738af7"></script>
+        <script src="/assets/js/html5shiv.js?v=78a2232542"></script>
     <![endif]-->
 
-    <meta name="generator" content="Ghost 0.4" />
-<link rel="alternate" type="application/rss+xml" title="Tarang Shah&#39;s Blog" href="../rss/index.html">
-<link rel="canonical" href="http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/" />
+    <link rel="canonical" href="http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/">
+    
+    <meta property="og:site_name" content="Tarang Shah's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to use the STM32f4 CCM in a Keil Project">
+    <meta property="og:description" content="The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for...">
+    <meta property="og:url" content="http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/">
+    <meta property="article:published_time" content="2014-07-09T17:02:30.241Z">
+    <meta property="article:modified_time" content="2014-07-18T18:29:45.403Z">
+    <meta property="article:tag" content="stm32">
+    <meta property="article:tag" content="electronics">
+    <meta property="article:tag" content="microcontroller">
+    <meta property="article:tag" content="ccm">
+    <meta property="article:tag" content="keil">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How to use the STM32f4 CCM in a Keil Project">
+    <meta name="twitter:description" content="The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for...">
+    <meta name="twitter:url" content="http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/">
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Tarang Shah&#x27;s Blog",
+    "author": {
+        "@type": "Person",
+        "name": "Tarang Shah",
+        "image": "http://tarangshah.github.io/content/images/2014/Jul/iron-man-arc-reactor-image-emerging-technologies-innovation-building-an-suit-part-44735.jpg",
+        "url": "http://tarangshah.github.io/author/tarang",
+        "sameAs": "http://tarang27@gmail.com"
+    },
+    "headline": "How to use the STM32f4 CCM in a Keil Project",
+    "url": "http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/",
+    "datePublished": "2014-07-09T17:02:30.241Z",
+    "dateModified": "2014-07-18T18:29:45.403Z",
+    "keywords": "stm32, electronics, microcontroller, ccm, keil",
+    "description": "The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost 0.5">
+    <link rel="alternate" type="application/rss+xml" title="Tarang Shah's Blog" href="http://tarangshah.github.io/rss/">
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -36,32 +75,27 @@
 <body class="post-template tag-stm32 tag-electronics tag-microcontroller tag-ccm tag-keil">
 
     <div class="header-container">
-    <header class="site-head" style="background-image:url(../content/images/2014/Jul/2013-06-28-21-18-49-1.jpg)">
-        <div class="header-text">
-            <h1 class="blog-title">Tarang Shah&#x27;s Blog</h1>
-            <span class="blog-description">A Blog about many things, mostly technology related.</span>    
-        </div>
-    </header>
-    <nav class="main-nav">
-            <ul>
-                <li><a href="../index.html"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="../about-me/index.html"><i class="fa fa-certificate"></i> About</a></li>
-                <li><a href="http://tarangshah.github.io/rss/"><i class="fa fa-rss"></i> Subscribe</a></li>
-            </ul>
-    </nav>
-</div>
-
+        <header class="site-head" style="background-image:url(../content/images/2014/Jul/2013-06-28-21-18-49-1.jpg)">
+            <div class="header-text">
+                <h1 class="blog-title">Tarang Shah's Blog</h1>
+                <span class="blog-description">A Blog about many things, mostly technology related.</span>
+            </div>
+        </header>
+        <nav class="main-nav">
+                <ul>
+                    <li><a href="../"><i class="fa fa-home"></i> Home</a></li>
+                    <li><a href="../about-me/"><i class="fa fa-certificate"></i> About</a></li>
+                    <li><a href="http://tarangshah.github.io/rss/"><i class="fa fa-rss"></i> Subscribe</a></li>
+                </ul>
+        </nav>
+    </div>
 
     
-
-
 
 <main class="content" role="main">
 
     <article class="post tag-stm32 tag-electronics tag-microcontroller tag-ccm tag-keil">
 
-        
-        
 
             <div class="inner">
                 <header class="post-header">
@@ -70,7 +104,7 @@
                     <hr>
                 </header>
                 <section class="post-content">
-                    <p>The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for Core Coupled Memory. <br />
+                    <p>The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for Core Coupled Memory. <br>
 The first two blocks of 128 KB in total, are connected to the various interconnects and are also connected to the Instruction and Data bus. So it is possible to use the 128 KB for data and instructions. The CCM on the other hand is directly wired to the core. This means that this memory is present on the data bus coming from the core. This is precisely the reason that the DMA cannot access the CCM memory. The DMA has its own data bus which is wired to the 128KB Non CCM - SRAM. Also it is not possible to use the Non CCM SRAM for both the DMA and Core at the same time, so one may have to wait while the other uses it. This can give rise to problems. The CCM on the other hand is only used by the Core. This makes it all the more important. So if you have a program which is very DMA intensive and also needs some processing to do, it would be wise to use the CCM for the Core's data.</p>
 
 <p>Now lets come to the "core' topic of this article. When programming for the STM32f4, the most popular options are the free and open source GNU toolchain, which is cross platform, and the Keil MDK toolchain which is proprietary but has a limited free version.</p>
@@ -87,10 +121,10 @@ The first two blocks of 128 KB in total, are connected to the various interconne
 
 <h1 id="scatterfile">Scatter File</h1>
 
-<p>Before creating the scatter file, go to the Target Options under the Project submenu <code>ALT+F7</code>. <br />
+<p>Before creating the scatter file, go to the Target Options under the Project submenu <code>ALT+F7</code>. <br>
 Go to the Linker tab and untick the "Use Memory Layout from Target Dialog" option. Then browse for your scatter file. It would be a good idea to create it in the project folder itself. </p>
 
-<p><img src="http://i.imgur.com/QXDm26N.png" alt="Screenshot" /></p>
+<p><img src="http://i.imgur.com/QXDm26N.png" alt="Screenshot"></p>
 
 <p>Your scatter file should be in the following format. This is a basic file. It is possible to have other options too.</p>
 
@@ -121,7 +155,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
 
 <p>For each data member you want to add to the CCM, you will have to add a tag as shown in the examples below.</p>
 
-<p>Examples <br />
+<p>Examples <br>
 <code>unsigned char imagearray[4] __attribute__ ((section("CCM_DATA"))) = {0x80, 0x80, 0x33, 0x80}</code></p>
 
 <pre><code>typedef struct _FOO {  
@@ -147,7 +181,7 @@ FOO ccmFoo[1024] __attribute__ ((section("CCM_DATA")));
 
 <p>Special mention to <code>clive1</code> of the STM32 forums. He has been a great help in my journey of "Discovering" the STM32F4.  :)</p>
 
-<p>If you would be interested in doing this on the GNU toolchain instead of Keil, heres a great post about it. <a href='http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html'>http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html</a></p>
+<p>If you would be interested in doing this on the GNU toolchain instead of Keil, heres a great post about it. <a href="http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html">http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html</a></p>
 
 <p>The scatter file for reallocating the STACK to the CCM</p>
 
@@ -170,7 +204,7 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
 }
 </code></pre>
 
-<p>You can also add <code>startup_stm32f4xx.o (STACK)</code> to the CCM block if it is already used. <br />
+<p>You can also add <code>startup_stm32f4xx.o (STACK)</code> to the CCM block if it is already used. <br>
 For example</p>
 
 <pre><code>RW_IRAM2 0x10000000 0x00010000  {  ; CCM  
@@ -181,27 +215,24 @@ For example</p>
                 </section>
                 <section class="post-share1">
                     <div class="post-share1icons">
-                        <a class="fa fa-twitter" href="https://twitter.com/share?text=How%20to%20use%20the%20STM32f4%20CCM%20in%20a%20Keil%20Project&amp;url=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/"
-                            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-                            <span class="hidden">Twitter</span>
+                        <a class="fa fa-twitter" href="https://twitter.com/share?text=How%20to%20use%20the%20STM32f4%20CCM%20in%20a%20Keil%20Project&amp;url=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                            <span>Twitter</span>
                         </a>
-                        <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/"
-                            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-                            <span class="hidden">Facebook</span>
+                        <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                            <span>Facebook</span>
                         </a>
-                        <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/"
-                           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-                            <span class="hidden">Google+</span>
+                        <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                            <span>Google+</span>
                         </a>
                     </div>
                     <h6>Share this post:</h6>
                 </section>
-                <p class="post-tags"><i class="fa fa-tags"></i> <a href="../tag/stm32/index.html">stm32</a>, <a href="../tag/electronics/index.html">electronics</a>, <a href="../tag/microcontroller/index.html">microcontroller</a>, <a href="../tag/ccm/index.html">ccm</a>, <a href="../tag/keil/index.html">keil</a></p>
+                <p class="post-tags"><i class="fa fa-tags"></i> <a href="../tag/stm32/">stm32</a>, <a href="../tag/electronics/">electronics</a>, <a href="../tag/microcontroller/">microcontroller</a>, <a href="../tag/ccm/">ccm</a>, <a href="../tag/keil/">keil</a></p>
             </div>
             <section class="post-author">
                 <div class="inner">
                     <div class="author-image-container col-aside">
-                        <img src="../content/images/2014/Jul/iron-man-arc-reactor-image-emerging-technologies-innovation-building-an-suit-part-44735.jpg" class="author-image" />
+                        <img src="../content/images/2014/Jul/iron-man-arc-reactor-image-emerging-technologies-innovation-building-an-suit-part-44735.jpg" class="author-image">
                     </div>
                     <div class="author-info">
                         <h4>Tarang Shah</h4>
@@ -213,30 +244,26 @@ For example</p>
             <div class="inner">
                 <div id="disqus_thread" data-disqus-shortname="tarangshah" data-disqus-identifier="3"></div>
             </div>
-        
     </article>
 
 </main>
-<script src="../assets/js/disqus.js?v=f8c6738af7"></script>
+<script src="../assets/js/disqus.js?v=78a2232542"></script>
 
 
     <footer class="site-footer">
         <div class="inner">
             <section class="copyright">
-                All content copyright <a href="http://tarangshah.github.io/">Tarang Shah&#x27;s Blog</a> &copy; 2014 &bull; All rights reserved.
+                All content copyright <a href="http://tarangshah.github.io/">Tarang Shah's Blog</a> © 2015 • All rights reserved.
             </section>
             <section class="poweredby">
-               Theme by <a href="http://adriannorman.me">Adrian Norman</a> &bull; Published with <a href="https://ghost.org"> Ghost</a>
+               Blog Theme by <a href="http://adriannorman.me">Adrian Norman</a> • Published with <a href="https://ghost.org"> Ghost</a>
             </section>
         </div>
     </footer>
 
-    
-    <script src="../public/jquery.js?v=f8c6738af7"></script>
+    <script src="../public/jquery.js?v=78a2232542"></script>
 
-    
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=f8c6738af7"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=f8c6738af7"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=78a2232542"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=78a2232542"></script>
 
 </body>
-</html>

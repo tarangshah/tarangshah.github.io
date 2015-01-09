@@ -1,0 +1,108 @@
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Tarang Shah's Blog</title><description>A Blog about many things, mostly technology related.</description><link>http://tarangshah.github.io/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Fri, 18 Jul 2014 18:46:35 GMT</lastBuildDate><atom:link href="http://tarangshah.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title>How to use the STM32f4 CCM in a Keil Project</title><description>&lt;p&gt;The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for Core Coupled Memory. &lt;br /&gt;
+The first two blocks of 128 KB in total, are connected to the various interconnects and are also connected to the Instruction and Data bus. So it is possible to use the 128 KB for data and instructions. The CCM on the other hand is directly wired to the core. This means that this memory is present on the data bus coming from the core. This is precisely the reason that the DMA cannot access the CCM memory. The DMA has its own data bus which is wired to the 128KB Non CCM - SRAM. Also it is not possible to use the Non CCM SRAM for both the DMA and Core at the same time, so one may have to wait while the other uses it. This can give rise to problems. The CCM on the other hand is only used by the Core. This makes it all the more important. So if you have a program which is very DMA intensive and also needs some processing to do, it would be wise to use the CCM for the Core's data.&lt;/p&gt;
+
+&lt;p&gt;Now lets come to the "core' topic of this article. When programming for the STM32f4, the most popular options are the free and open source GNU toolchain, which is cross platform, and the Keil MDK toolchain which is proprietary but has a limited free version.&lt;/p&gt;
+
+&lt;p&gt;In the GNU toolchain, memory management is done using linker files which generally have .ld extension. In Keil, which uses the MDK compiler, we need to specify "scatter" files to acheive this.&lt;/p&gt;
+
+&lt;p&gt;The main steps involved are&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="#scatter-file"&gt;Create a scatter file with the necessary address&lt;/a&gt;  &lt;/li&gt;
+&lt;li&gt;&lt;a href="#adding-the-attribute-tag"&gt;Add the &lt;code&gt;__attribute__&lt;/code&gt; tag to the data item(s)&lt;/a&gt;  &lt;/li&gt;
+&lt;li&gt;&lt;a href="#confirmation"&gt;Check your generated MAP file for confirmation&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id="scatterfile"&gt;Scatter File&lt;/h1&gt;
+
+&lt;p&gt;Before creating the scatter file, go to the Target Options under the Project submenu &lt;code&gt;ALT+F7&lt;/code&gt;. &lt;br /&gt;
+Go to the Linker tab and untick the "Use Memory Layout from Target Dialog" option. Then browse for your scatter file. It would be a good idea to create it in the project folder itself. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src='http://i.imgur.com/QXDm26N.png'  alt="Screenshot" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Your scatter file should be in the following format. This is a basic file. It is possible to have other options too.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;; ****************************************************
+; *** Scatter-Loading Description File for STM32f4 ***
+; ****************************************************
+
+LR_IROM1 0x08000000 0x00100000  {    ; load region size_region  
+  ER_IROM1 0x08000000 0x00100000  {  ; load address = execution address
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+  }
+  RW_IRAM1 0x20000000 0x00020000  {  ; RW data
+   .ANY (+RW +ZI)
+  }
+  RW_IRAM2 0x10000000 0x00010000  {  ; CCM data
+     .ANY (CCM_DATA)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Over here &lt;code&gt;CCM_DATA&lt;/code&gt; is a label I will use even later in the post. You can call it anything you want. But ensure to change it at all the places.&lt;/p&gt;
+
+&lt;p&gt;You can also reallocate your Stack to the CCM. The scatter file for that is provided later.&lt;/p&gt;
+
+&lt;h1 id="addingtheattributetag"&gt;Adding the attribute tag&lt;/h1&gt;
+
+&lt;p&gt;For each data member you want to add to the CCM, you will have to add a tag as shown in the examples below.&lt;/p&gt;
+
+&lt;p&gt;Examples &lt;br /&gt;
+&lt;code&gt;unsigned char imagearray[4] __attribute__ ((section("CCM_DATA"))) = {0x80, 0x80, 0x33, 0x80}&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;typedef struct _FOO {  
+  int a[3];
+  int b[4];
+  int c[5];
+} FOO;
+FOO ccmFoo[1024] __attribute__ ((section("CCM_DATA")));  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="confirmation"&gt;Confirmation&lt;/h1&gt;
+
+&lt;p&gt;Once the above is done you can build your code in Keil. Then go to your project folder and open the &lt;code&gt;Project-Name.MAP&lt;/code&gt; file in a text editor.&lt;/p&gt;
+
+&lt;p&gt;Search for the variable you wanted to store in CCM (for example &lt;code&gt;imagearray&lt;/code&gt;). You will find it under the &lt;em&gt;Global Symbols&lt;/em&gt; heading.  &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;imagearray   0x10000000   Data   11520   main.o (CCM_DATA)  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you find &lt;code&gt;CCM_DATA&lt;/code&gt; and a memory address starting with 0x100... in the same row as your variable name, you're done!!&lt;/p&gt;
+
+&lt;p&gt;Also you can dynamically store an array to the CCM using the standard &lt;code&gt;memcpy&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;Special mention to &lt;code&gt;clive1&lt;/code&gt; of the STM32 forums. He has been a great help in my journey of "Discovering" the STM32F4.  :)&lt;/p&gt;
+
+&lt;p&gt;If you would be interested in doing this on the GNU toolchain instead of Keil, heres a great post about it. &lt;a href='http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html' &gt;http://sigalrm.blogspot.com/2013/12/using-ccm-memory-on-stm32.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The scatter file for reallocating the STACK to the CCM&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;; *************************************************************
+; ***     Scatter-Loading Description File for STM32F4      ***
+; *************************************************************
+
+LR_IROM1 0x08000000 0x00100000  {    ; load region size_region  
+  ER_IROM1 0x08000000 0x00100000  {  ; load address = execution address
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+  }
+  RW_IRAM1 0x20000000 0x00020000  {  ; RW data
+   .ANY (+RW +ZI)
+  }
+  RW_IRAM2 0x10000000 0x00010000  {  ; CCM
+   startup_stm32f4xx.o (STACK)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can also add &lt;code&gt;startup_stm32f4xx.o (STACK)&lt;/code&gt; to the CCM block if it is already used. &lt;br /&gt;
+For example&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RW_IRAM2 0x10000000 0x00010000  {  ; CCM  
+   .ANY (CCM_DATA)
+   startup_stm32f4xx.o (STACK)
+  }
+&lt;/code&gt;&lt;/pre&gt;</description><link>http://tarangshah.github.io/how-to-use-the-stm32f4-ccm-in-a-keil-project/</link><guid isPermaLink="false">86aa8827-6c72-4f9b-b74e-408ee730f15e</guid><category>stm32</category><category>electronics</category><category>microcontroller</category><category>ccm</category><category>keil</category><dc:creator>Tarang Shah</dc:creator><pubDate>Wed, 09 Jul 2014 17:02:30 GMT</pubDate></item></channel></rss>
