@@ -228,7 +228,7 @@ a {
 }
 
 a:hover {
-    color: rgb(247,97,97);
+    color: rgb(97,97,247);
 }
 
 h1 a, h2 a, h3 a,
@@ -555,8 +555,8 @@ h1.blog-title {
     position: absolute;
     bottom: 0;
     width: 100%;
-	background: rgb(247,97,97);
-    background-color: rgba(247,97,97,0.85);
+	background: rgb(137,137,247);
+    background-color: rgba(137,137,247,0.85);
     z-index: 100;
     text-align: center;
 }
@@ -594,7 +594,7 @@ h1.blog-title {
 }
 
 .main-nav li a:hover {
-    color: rgb(250,180,180);
+    color: rgb(200,200,250);
 }
 
 .main-nav .fa {
@@ -605,7 +605,7 @@ h1.blog-title {
 .nav-home-btn {
     line-height: 1;
     padding: 5px 8px 4px;
-    background-color: rgb(250,150,150);
+    background-color: rgb(200,200,250);
     border-radius: 2px;
     letter-spacing: 0.5px;
 }
@@ -686,7 +686,7 @@ main {
 }
 
 .site-footer a {
-    color: #f76161;
+    color: #8181f7;
     text-decoration: none;
 }
 
@@ -781,7 +781,7 @@ main {
 }
 
 .post-share1 .fa:hover {
-    color: rgb(247,97,97);
+    color: rgb(97,97,247);
 }
 
 .post-share1 h6 {
@@ -847,7 +847,7 @@ main {
 }
 
 .pagination a:hover {
-    color: rgb(247,97,97);
+    color: rgb(97,97,247);
 }
 
 .page-number {

@@ -11,11 +11,11 @@
 
     <link rel="shortcut icon" href="../assets/favicon.ico">
     <link href="http://fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=ec6044985a">
-    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=ec6044985a">
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=cf3e577e45">
+    <link rel="stylesheet" type="text/css" href="../assets/css/font-awesome.min.css?v=cf3e577e45">
 
     <!--[if lt IE 9]>
-        <script src="/assets/js/html5shiv.js?v=ec6044985a"></script>
+        <script src="/assets/js/html5shiv.js?v=cf3e577e45"></script>
     <![endif]-->
 
     <link rel="canonical" href="http://tarangshah.me/how-to-use-the-stm32f4-ccm-in-a-keil-project/">
@@ -26,7 +26,7 @@
     <meta property="og:description" content="The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for...">
     <meta property="og:url" content="http://tarangshah.me/how-to-use-the-stm32f4-ccm-in-a-keil-project/">
     <meta property="article:published_time" content="2014-07-09T17:02:30.241Z">
-    <meta property="article:modified_time" content="2014-07-18T18:29:45.403Z">
+    <meta property="article:modified_time" content="2015-01-11T12:23:24.530Z">
     <meta property="article:tag" content="stm32">
     <meta property="article:tag" content="electronics">
     <meta property="article:tag" content="microcontroller">
@@ -53,7 +53,7 @@
     "headline": "How to use the STM32f4 CCM in a Keil Project",
     "url": "http://tarangshah.me/how-to-use-the-stm32f4-ccm-in-a-keil-project/",
     "datePublished": "2014-07-09T17:02:30.241Z",
-    "dateModified": "2014-07-18T18:29:45.403Z",
+    "dateModified": "2015-01-11T12:23:24.530Z",
     "keywords": "stm32, electronics, microcontroller, ccm, keil",
     "description": "The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for..."
 }
@@ -104,8 +104,13 @@
                     <hr>
                 </header>
                 <section class="post-content">
-                    <p>The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for Core Coupled Memory. <br>
-The first two blocks of 128 KB in total, are connected to the various interconnects and are also connected to the Instruction and Data bus. So it is possible to use the 128 KB for data and instructions. The CCM on the other hand is directly wired to the core. This means that this memory is present on the data bus coming from the core. This is precisely the reason that the DMA cannot access the CCM memory. The DMA has its own data bus which is wired to the 128KB Non CCM - SRAM. Also it is not possible to use the Non CCM SRAM for both the DMA and Core at the same time, so one may have to wait while the other uses it. This can give rise to problems. The CCM on the other hand is only used by the Core. This makes it all the more important. So if you have a program which is very DMA intensive and also needs some processing to do, it would be wise to use the CCM for the Core's data.</p>
+                    <p>The STM32F4 microcontrollers have 3 major blocks of memory. Each of 64KB. Two out of them are contiguous whereas the third block is non-contiguous with the other two. The third block is called the CCM. The CCM is short for Core Coupled Memory.</p>
+
+<h6 id="whyusetheccm">Why use the CCM?</h6>
+
+<p>The first two blocks are of 128 KB in total, and are connected to the various interconnects. They are also connected to the Instruction and Data bus. So it is possible to use the 128 KB for data and instructions. The CCM on the other hand is directly wired to the core. This means that this memory is present on the data bus coming from the core. This is precisely the reason that the DMA cannot access the CCM memory. The DMA has its own data bus which is wired to the 128KB Non CCM - SRAM. Also it is not possible to use the Non CCM SRAM for both the DMA and Core at the same time, so one may have to wait while the other uses it. This can give rise to problems. The CCM on the other hand is only used by the Core. This makes it all the more important. So if you have a program which is very DMA intensive and also needs some processing to do, it would be wise to use the CCM for the Core's data.</p>
+
+<h6 id="howtodoit">How to do it</h6>
 
 <p>Now lets come to the "core' topic of this article. When programming for the STM32f4, the most popular options are the free and open source GNU toolchain, which is cross platform, and the Keil MDK toolchain which is proprietary but has a limited free version.</p>
 
@@ -121,8 +126,13 @@ The first two blocks of 128 KB in total, are connected to the various interconne
 
 <h1 id="scatterfile">Scatter File</h1>
 
-<p>Before creating the scatter file, go to the Target Options under the Project submenu <code>ALT+F7</code>. <br>
-Go to the Linker tab and untick the "Use Memory Layout from Target Dialog" option. Then browse for your scatter file. It would be a good idea to create it in the project folder itself. </p>
+<p>Creating the scatter file</p>
+
+<ul>
+<li>Go to the Target Options under the Project submenu <code>ALT+F7</code>.</li>
+<li>Switch to the Linker tab and untick the "Use Memory Layout from Target Dialog" option. </li>
+<li>In the scatter file text box, browse for your scatter file. It would be a good idea to create it in the project folder itself. </li>
+</ul>
 
 <p><img src="http://i.imgur.com/QXDm26N.png" alt="Screenshot"></p>
 
@@ -255,7 +265,7 @@ For example</p>
     </article>
 
 </main>
-<script src="../assets/js/disqus.js?v=ec6044985a"></script>
+<script src="../assets/js/disqus.js?v=cf3e577e45"></script>
 
 
     <footer class="site-footer">
@@ -269,9 +279,9 @@ For example</p>
         </div>
     </footer>
 
-    <script src="../public/jquery.js?v=ec6044985a"></script>
+    <script src="../public/jquery.js?v=cf3e577e45"></script>
 
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=ec6044985a"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=ec6044985a"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=cf3e577e45"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=cf3e577e45"></script>
 
 </body>
